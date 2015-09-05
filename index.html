@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset='UTF-8'>
     <title>Hello World!</title>
   </head>
   <body>
     <h1>Hello World!</h1>
     We are using io.js <script>document.write(process.version)</script>
     and Electron <script>document.write(process.versions['electron'])</script>.
+    <div id='pdf-holder' style="border: solid">
+        ここにドラッグしてね
+    </div>
+    <div id='result-holder' style="border: solid">
+        
+    </div>
   </body>
+  <script src='index.js'></script>
 </html>
