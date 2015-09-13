@@ -1,3 +1,3 @@
 [submodule "diff_pdf_image"]
 	path = diff_pdf_image
-	url = git@github.com:sugamasao/diff_pdf_image.git
+	url = git@github.com:koyachi/diff_pdf_image.git
