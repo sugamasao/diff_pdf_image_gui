@@ -79,7 +79,7 @@ var collectFile = function(directory) {
 }
 
 var findExecuteScript = function() {
-  return require('path').join(__dirname, 'diff_pdf_image.rb');
+  return require('path').join(__dirname, 'diff_pdf_image', 'diff_pdf_image.rb');
 }
 
 var findResultDirectory = function() {
