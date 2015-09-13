@@ -1,3 +1,6 @@
+var path = require('path');
+var glob = require('glob');
+var child_process = require('child_process');
 
 /** documentにドラッグされた場合 / ドロップされた場合 */
 document.ondragover = document.ondrop = function(e) {
@@ -49,10 +52,9 @@ var showErorr = function(message) {
 }
 
 var execCommand = function(err, success, files, pageNumbers) {
-  var exec = require('child_process').execSync;
   var command = 'ruby ' + findExecuteScript() + ' ' + files[0].path + ' ' + files[1].path + ' ' + pageNumbers.join(' ');
   console.log("command:" + command);
-  exec(command);
+  child_process.execSync(command);
 }
 
 var showResult = function(directory) {
@@ -73,27 +75,20 @@ var showResult = function(directory) {
 }
 
 var collectFile = function(directory) {
-  var path = require('path');
-  var glob = require('glob');
+
   return glob.sync(path.join(directory, '/*.png'), { nocase:true });
 }
 
 var findExecuteScript = function() {
-  return require('path').join(__dirname, 'diff_pdf_image', 'diff_pdf_image.rb');
+  return path.join(__dirname, 'diff_pdf_image', 'diff_pdf_image.rb');
 }
 
 var findResultDirectory = function() {
-  var exec = require('child_process').execSync;
-  var path = require('path');
-  var glob = require('glob');
-
   var command = "ls -Flt | egrep diff_images\.\*/ | head -1 | awk '{print $9}'"
-  return require('path').join(__dirname, "" + exec(command)).trim();
+  return path.join(__dirname, "" + child_process.execSync(command)).trim();
 }
 
 var validateFiles = function(files) {
-  var fs = require('fs');
-
   if(files.length != 2) { return false; }
   for(var i = 0; i < files.length; i++) {
     if(!files[i].type == "application/pdf") { return false }
