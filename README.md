@@ -32,5 +32,5 @@ $ electron .
 ### packaging
 
 ```shell
-$ electron-packager . diff_pdf_image_gui --platform=darwin,win32 --arch=x64 --version=0.31.2 --out=build
+$ electron-packager . diff_pdf_image_gui --platform=darwin,win32 --arch=x64 --version=0.31.2 --out=build --ignore=diff_images_\*
 ```
