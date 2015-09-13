@@ -2,17 +2,24 @@
 <html>
   <head>
     <meta charset='UTF-8'>
-    <title>Hello World!</title>
+    <title>PDF Diff for GUI</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <!--<script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>-->
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using io.js <script>document.write(process.version)</script>
-    and Electron <script>document.write(process.versions['electron'])</script>.
-    <div id='pdf-holder' style="border: solid">
-        ここにドラッグしてね
+    <div class="jumbotron" id='pdf-holder'>
+      <h1>Diff PDF Image for GUI</h1>
+      <div class="container" id='pdf-holder-announce'>
+        <p>ここにドラッグしてね</p>
+      </div>
     </div>
-    <div id='result-holder' style="border: solid">
-        
+    <div class="input-group input-group-lg">
+      <span class="input-group-addon" id="page-numbers-text">ページ番号</span>
+      <input type="text" id="page-numbers" class="form-control" placeholder="Page Numbers(split of space)" aria-describedby="page-numbers-text">
+    </div>
+    <hr />
+    <div id='result-holder' class="row" draggable="false">
+
     </div>
   </body>
   <script src='index.js'></script>

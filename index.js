@@ -6,13 +6,15 @@ document.ondragover = document.ondrop = function(e) {
 }
 
 var pdfHolder = document.getElementById('pdf-holder');
-/** hoverエリアにドラッグされた場合 */
 pdfHolder.ondragover = function (e) {
+  e.dataTransfer.dropEffect = 'copy';
   return false;
 }
 
 /** hoverエリアから外れた or ドラッグが終了した */
-pdfHolder.ondragleave = pdfHolder.ondragend = function () {
+pdfHolder.ondragleave = pdfHolder.ondragend = function (e) {
+//  e.preventDefault(); // イベントの伝搬を止めて、アプリケーションのHTMLとファイルが差し替わらないようにする
+//  e.originalEvent.dataTransfer.dropEffect = 'copy';
   return false;
 }
 
@@ -20,17 +22,25 @@ pdfHolder.ondragleave = pdfHolder.ondragend = function () {
 pdfHolder.ondrop = function (e) {
   e.preventDefault(); // イベントの伝搬を止めて、アプリケーションのHTMLとファイルが差し替わらないようにする
   var files = e.dataTransfer.files;
-
+  var pageNumberData = document.getElementById('page-numbers').value;
+  var pageNumbers = parsePageNumbers(pageNumberData);
   if(!validateFiles(files)) {
     return false;
   }
-  e.target.innerHTML = "ちょっとまってね"
-  execCommand(showErorr, showResult, files);
+  var div = document.getElementById("pdf-holder-announce");
+  var text = "<p>ちょっとまってね</p><ul>";
+  for(var i = 0; i < files.length; i++) {
+    text += "<li>" + files[i].name + '</li>';
+  }
+  text += "</ul>";
+  div.innerHTML = text;
 
+  // TODO 非同期処理
+  execCommand(showErorr, showResult, files, pageNumbers);
   var resultDirectory = findResultDirectory();
   showResult(resultDirectory);
 
-  e.target.innerHTML = "ここにドラッグしてね"
+  div.innerHTML = "<p>ここにドラッグしてね</p>"
   return false;
 }
 
@@ -38,9 +48,10 @@ var showErorr = function(message) {
   alert(message);
 }
 
-var execCommand = function(err, success, files) {
+var execCommand = function(err, success, files, pageNumbers) {
   var exec = require('child_process').execSync;
-  var command = 'ruby ' + findExecuteScript() + ' ' + files[0].path + ' ' + files[1].path;
+  var command = 'ruby ' + findExecuteScript() + ' ' + files[0].path + ' ' + files[1].path + ' ' + pageNumbers.join(' ');
+  console.log("command:" + command);
   exec(command);
 }
 
@@ -49,9 +60,14 @@ var showResult = function(directory) {
   var resultHolder = document.getElementById('result-holder');
 
   for(var i = 0; i < files.length; i++) {
+//    var div = document.createElement('div');
+//    div.className = "col-xs-12 col-md-1";
     var img = document.createElement('img');
     console.log(files[i]);
+    img.width = '200';
+//    img.height = '150';
     img.src = files[i];
+//    div.appendChild(img);
     resultHolder.appendChild(img);
   }
 }
@@ -83,4 +99,10 @@ var validateFiles = function(files) {
     if(!files[i].type == "application/pdf") { return false }
   }
   return true;
+}
+
+var parsePageNumbers = function(pageNumberData) {
+  return pageNumberData.split(' ').filter(function(val){
+    return isFinite(val)
+  })
 }

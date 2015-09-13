@@ -10,6 +10,7 @@
   "author": "sugamasao",
   "license": "ISC",
   "dependencies": {
+    "bootstrap": "^3.3.5",
     "glob": "^5.0.14"
   }
 }
