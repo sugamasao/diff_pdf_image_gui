@@ -52,7 +52,11 @@ var showErorr = function(message) {
 }
 
 var execCommand = function(err, success, files, pageNumbers) {
-  var command = 'ruby ' + findExecuteScript() + ' ' + files[0].path + ' ' + files[1].path + ' ' + pageNumbers.join(' ');
+  if (process.platform == 'darwin') {
+    process.env.PATH += ':/usr/local/bin';
+  }
+  var envPath = 'PATH=' + process.env.PATH;
+  var command = envPath + ' ' + 'ruby ' + findExecuteScript() + ' ' + files[0].path + ' ' + files[1].path + ' ' + pageNumbers.join(' ');
   console.log("command:" + command);
   child_process.execSync(command);
 }
@@ -75,8 +79,7 @@ var showResult = function(directory) {
 }
 
 var collectFile = function(directory) {
-
-  return glob.sync(path.join(directory, '/*.png'), { nocase:true });
+  return glob.sync(path.join(directory, '*.png'), { nocase:true });
 }
 
 var findExecuteScript = function() {
@@ -84,8 +87,9 @@ var findExecuteScript = function() {
 }
 
 var findResultDirectory = function() {
-  var command = "ls -Flt | egrep diff_images\.\*/ | head -1 | awk '{print $9}'"
-  return path.join(__dirname, "" + child_process.execSync(command)).trim();
+  var localPath = path.join(__dirname, 'diff_pdf_image');
+  var command = "ls -Flt " + localPath + " | egrep diff_images\_\* | head -1 | awk '{print $9}'";
+  return path.join(localPath, "" + child_process.execSync(command)).trim();
 }
 
 var validateFiles = function(files) {
